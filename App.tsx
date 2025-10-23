@@ -129,7 +129,7 @@ export default function App() {
     switch (currentPage) {
       case 'ordering':
         return currentOrderingOrder ? (
-          <OrderingScreen patient={currentPatient} order={currentOrderingOrder} setOrder={handleUpdateOrder} onReviewOrder={() => navigateToPage('review')} isTimeLogicDisabled={isTimeLogicDisabled} setIsTimeLogicDisabled={setIsTimeLogicDisabled} />
+          <OrderingScreen patient={currentPatient} order={currentOrderingOrder} setOrder={handleUpdateOrder} onReviewOrder={() => navigateToPage('review')} isTimeLogicDisabled={isTimeLogicDisabled} />
         ) : (
              <div className="text-center p-10">
                 <h2 className="text-2xl font-semibold text-rush-green-dark">Loading your order...</h2>
@@ -160,6 +160,7 @@ export default function App() {
           onLogout={logout}
           onNavigateToHistory={() => navigateToPage('order-history')}
           isTimeLogicDisabled={isTimeLogicDisabled}
+          setIsTimeLogicDisabled={setIsTimeLogicDisabled}
         />
        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
         {renderPage()}

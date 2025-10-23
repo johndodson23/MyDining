@@ -1,13 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Patient } from '../types';
-import { RushLogo } from './Icons';
+import { RushLogo, SettingsIcon, OrdersIcon, LogoutIcon } from './Icons';
 
 interface HeaderProps {
     patient: Patient | null;
     onLogout: () => void;
     onNavigateToHistory: () => void;
     isTimeLogicDisabled: boolean;
+    setIsTimeLogicDisabled: (disabled: boolean) => void;
 }
 
 const Clock: React.FC = () => {
@@ -21,7 +22,6 @@ const Clock: React.FC = () => {
     const formatDate = (date: Date) => {
         return date.toLocaleDateString(undefined, {
             weekday: 'long',
-            year: 'numeric',
             month: 'long',
             day: 'numeric',
         });
@@ -43,7 +43,20 @@ const Clock: React.FC = () => {
 }
 
 
-export const Header: React.FC<HeaderProps> = ({ patient, onLogout, onNavigateToHistory }) => {
+export const Header: React.FC<HeaderProps> = ({ patient, onLogout, onNavigateToHistory, isTimeLogicDisabled, setIsTimeLogicDisabled }) => {
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const settingsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+                setIsSettingsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     return (
         <header className="bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,22 +70,55 @@ export const Header: React.FC<HeaderProps> = ({ patient, onLogout, onNavigateToH
                     </div>
 
                      {patient && (
-                        <div className="flex items-center gap-4">
-                             <button 
-                                onClick={onNavigateToHistory}
-                                className="bg-white hover:bg-gray-100 text-rush-green font-semibold py-2 px-4 rounded-lg text-sm transition-colors border border-rush-green"
-                            >
-                                View My Orders
-                            </button>
+                        <div className="flex items-center gap-6">
                             <div className="text-right">
                                 <p className="text-lg font-semibold text-rush-green-dark">{patient.name}</p>
                                 <p className="text-base text-rush-gray-dark">Room: {patient.roomNumber}</p>
                             </div>
-                            <button 
-                                onClick={onLogout}
-                                className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm transition-colors"
+                            <div className="h-12 border-l border-gray-300"></div>
+                             <button 
+                                onClick={onNavigateToHistory}
+                                className="flex items-center gap-2 text-gray-600 hover:text-rush-green font-semibold text-sm transition-colors"
                             >
-                                Logout (Switch Patient)
+                                <OrdersIcon className="w-5 h-5" />
+                                <span>View My Orders</span>
+                            </button>
+
+                            <div className="relative" ref={settingsRef}>
+                                <button
+                                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                                    className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-rush-green-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rush-green"
+                                    aria-label="Settings"
+                                >
+                                    <SettingsIcon className="w-6 h-6" />
+                                </button>
+                                {isSettingsOpen && (
+                                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-10 border">
+                                        <div className="px-4 py-2">
+                                            <p className="text-sm font-semibold text-gray-700">Demo Settings</p>
+                                            <div className="mt-2 flex items-center justify-between">
+                                                 <label htmlFor="time-toggle" className="text-xs text-gray-600 cursor-pointer">
+                                                    Bypass Cutoff Times
+                                                </label>
+                                                <input
+                                                    id="time-toggle"
+                                                    type="checkbox"
+                                                    checked={isTimeLogicDisabled}
+                                                    onChange={(e) => setIsTimeLogicDisabled(e.target.checked)}
+                                                    className="ml-2 h-4 w-4 text-rush-green focus:ring-rush-green border-gray-300 rounded"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                             <button 
+                                onClick={onLogout}
+                                className="flex items-center gap-2 text-gray-600 hover:text-rush-red font-semibold text-sm transition-colors"
+                            >
+                                <LogoutIcon className="w-5 h-5" />
+                                <span>Logout</span>
                             </button>
                         </div>
                      )}

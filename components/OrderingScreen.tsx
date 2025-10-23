@@ -13,7 +13,6 @@ interface OrderingScreenProps {
   setOrder: (order: Order) => void;
   onReviewOrder: () => void;
   isTimeLogicDisabled: boolean;
-  setIsTimeLogicDisabled: (disabled: boolean) => void;
 }
 
 const getDayOfWeek = (): number => {
@@ -26,7 +25,7 @@ const isSide = (item: Item): boolean => !isEntree(item) && !NON_SIDE_CATEGORIES.
 
 const categorySortOrder = ['Featured', 'Entrées', 'Breakfast Entrées', 'Soup', 'Starters'];
 
-export const OrderingScreen: React.FC<OrderingScreenProps> = ({ patient, order, setOrder, onReviewOrder, isTimeLogicDisabled, setIsTimeLogicDisabled }) => {
+export const OrderingScreen: React.FC<OrderingScreenProps> = ({ patient, order, setOrder, onReviewOrder, isTimeLogicDisabled }) => {
   const allMeals = useMemo(() => Object.values(MealTime) as MealTime[], []);
   const initialMeal = allMeals.find(meal => isOrderingAvailable(meal, isTimeLogicDisabled)) || allMeals[0];
   
@@ -126,18 +125,6 @@ export const OrderingScreen: React.FC<OrderingScreenProps> = ({ patient, order, 
             <div>
                 <h2 className="text-2xl font-bold text-gray-800">Welcome, {patient.name}</h2>
                 <p className="text-lg text-rush-gray-dark">You are ordering for your <strong>{patient.diet.join(', ')}</strong> diet.</p>
-            </div>
-            <div className="bg-yellow-100 border border-yellow-300 p-2 rounded-lg text-center text-xs font-semibold text-yellow-800 flex items-center flex-shrink-0">
-                <label htmlFor="time-toggle" className="cursor-pointer">
-                    Bypass<br/>Cutoff Times
-                </label>
-                <input
-                    id="time-toggle"
-                    type="checkbox"
-                    checked={isTimeLogicDisabled}
-                    onChange={(e) => setIsTimeLogicDisabled(e.target.checked)}
-                    className="ml-2"
-                />
             </div>
         </div>
 

@@ -36,5 +36,12 @@ export const PATIENTS: Patient[] = [
     roomNumber: '615D',
     diet: [Diet.Kosher],
     allergies: ['Dairy']
+  },
+  {
+    id: 6,
+    name: 'Alex Ray',
+    roomNumber: '911B',
+    diet: [Diet.General],
+    allergies: []
   }
 ];
