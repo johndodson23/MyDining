@@ -1,0 +1,5 @@
+{
+  "name": "RUSH MyDining Patient Ordering System",
+  "description": "A web application for patients at Rush University Medical Center to order meals based on their EMR-assigned diet. This system replaces the manual phone-in process, improving patient safety and operational efficiency.",
+  "requestFramePermissions": []
+}
