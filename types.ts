@@ -66,6 +66,7 @@ export interface OrderItem {
 export interface MealOrder {
   items: OrderItem[];
   specialNotes: string;
+  needsDietitianReview?: boolean;
 }
 
 export interface Order {
@@ -77,3 +78,15 @@ export interface Order {
     [key in MealTime]?: MealOrder;
   };
 };
+
+export enum StaffRole {
+    Staff = 'staff',
+    Manager = 'manager',
+    Dietitian = 'dietitian'
+}
+
+export interface Staff {
+    id: string;
+    name: string;
+    role: StaffRole;
+}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Order, OrderStatus, MealTime } from '../types';
+import { Order, OrderStatus, MealTime, MealOrder } from '../types';
 
 interface OrderHistoryScreenProps {
   orders: Order[];
@@ -10,7 +10,8 @@ interface OrderHistoryScreenProps {
 
 const OrderCard: React.FC<{order: Order, onSelect: () => void}> = ({ order, onSelect }) => {
     const mealCount = Object.keys(order.meals).length;
-    const totalItems = Object.values(order.meals).reduce((acc, meal) => acc + (meal?.items.length || 0), 0);
+    // FIX: Cast meal to MealOrder to resolve 'unknown' type from Object.values and correctly access 'items'
+    const totalItems = Object.values(order.meals).reduce((acc, meal) => acc + ((meal as MealOrder)?.items.length || 0), 0);
     const isOrdering = order.status === OrderStatus.Ordering;
 
     return (

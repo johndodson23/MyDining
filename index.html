@@ -7,6 +7,37 @@
     <title>RUSH MyDining</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style media="print">
+      @page {
+        size: auto;
+        margin: 0.5in;
+      }
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .printable-area {
+        display: block !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+      }
+      .digital-ticket-print {
+        width: 280px !important;
+        font-size: 14px !important;
+        color: black !important;
+      }
+      .digital-ticket-print .bg-rush-red {
+         background-color: #ff6f61 !important;
+         color: white !important;
+      }
+      .digital-ticket-print .bg-rush-yellow {
+         background-color: #ffd166 !important;
+         color: #374151 !important;
+      }
+    </style>
     <script>
       tailwind.config = {
         theme: {
@@ -47,7 +78,8 @@
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@6"
   }
 }
 </script>

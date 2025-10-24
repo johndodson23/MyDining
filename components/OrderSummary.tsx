@@ -22,7 +22,7 @@ const groupItemsByCategory = (items: OrderItem[]): { [category: string]: OrderIt
     }, {} as { [category: string]: OrderItem[] });
 };
 
-const MealOrderSummary: React.FC<{mealOrder: MealOrder, onNotesChange: (notes: string) => void, onRemove: (itemId: number) => void}> = ({ mealOrder, onNotesChange, onRemove }) => {
+const MealOrderSummary: React.FC<{mealOrder: MealOrder, onNotesChange: (notes: string) => void, onRemove: (itemId: number) => void, onDietitianReviewChange: (checked: boolean) => void}> = ({ mealOrder, onNotesChange, onRemove, onDietitianReviewChange }) => {
     const entreeCount = mealOrder.items.filter(({ item }) => isEntree(item)).length;
     const sideCount = mealOrder.items.filter(({ item }) => isSide(item)).length;
     const groupedItems = groupItemsByCategory(mealOrder.items);
@@ -70,6 +70,17 @@ const MealOrderSummary: React.FC<{mealOrder: MealOrder, onNotesChange: (notes: s
                 className="w-full mt-3 p-2 border border-gray-300 rounded-md text-sm focus:ring-rush-green focus:border-rush-green"
                 rows={2}
             ></textarea>
+            <div className="mt-3">
+                <label className="flex items-center text-sm cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={mealOrder.needsDietitianReview || false}
+                        onChange={(e) => onDietitianReviewChange(e.target.checked)}
+                        className="h-4 w-4 text-rush-green focus:ring-rush-green border-gray-300 rounded"
+                    />
+                    <span className="ml-2 text-gray-700">Request Dietitian Review for this meal</span>
+                </label>
+            </div>
         </div>
     );
 }
@@ -82,12 +93,25 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ order, activeMeal, s
         meals: {
             ...order.meals,
             [activeMeal]: {
-                ...(order.meals[activeMeal] || { items: [] }),
+                ...(order.meals[activeMeal] || { items: [], specialNotes: '' }),
                 specialNotes: notes,
             },
         },
     });
   };
+
+  const handleDietitianReviewChange = (checked: boolean) => {
+      setOrder({
+        ...order,
+        meals: {
+            ...order.meals,
+            [activeMeal]: {
+                ...(order.meals[activeMeal] || { items: [], specialNotes: '' }),
+                needsDietitianReview: checked,
+            },
+        },
+    });
+  }
   
   const handleRemoveItem = (itemId: number) => {
     if (!order.meals[activeMeal]) return;
@@ -109,7 +133,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ order, activeMeal, s
   const activeMealOrder = order.meals[activeMeal] || { items: [], specialNotes: ''};
 
   return (
-    <div className="bg-rush-gray-light p-6 rounded-lg shadow-md sticky top-8">
+    <div className="bg-rush-gray-light p-6 rounded-lg shadow-md sticky top-8 no-print">
       <div className="pb-4">
         <h3 className="text-lg font-semibold text-gray-700">My Full Order Summary</h3>
         <ul className="text-sm text-gray-600 mt-2 space-y-1">
@@ -125,6 +149,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ order, activeMeal, s
             mealOrder={activeMealOrder}
             onNotesChange={handleNotesChange}
             onRemove={handleRemoveItem}
+            onDietitianReviewChange={handleDietitianReviewChange}
         />
       </div>
        <button
